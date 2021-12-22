@@ -18,9 +18,3 @@ class MyData(Dataset):
 
     def __len__(self):
         return len(self.img_path)
-
-root_dir = "101_ObjectCategories"
-ants_label_dir = "ant"
-ants_dataset = MyData(root_dir,ants_label_dir)
-img ,label=ants_dataset[0]
-img.show()
