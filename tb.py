@@ -10,7 +10,15 @@ img ,label=ants_dataset[0]
 img_array = np.array(img)
 
 writer = SummaryWriter("logs")
-writer.add_image("test",img_array,1,dataformats='HWC')
+
+
+for i in range(40):
+    try:
+        writer.add_image("test",img_array,i,dataformats='HWC')
+    except:
+        print(i)
+
+
 for i in range(100):
     writer.add_scalar("y=x",i,i)
 
