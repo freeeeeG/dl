@@ -1,4 +1,6 @@
+from numpy.core.fromnumeric import resize
 from torch.utils.tensorboard import SummaryWriter
+from torchvision.transforms.transforms import Normalize
 from MyData import * 
 import numpy as np
 from torchvision import transforms
@@ -10,13 +12,30 @@ ants_dataset = MyData(root_dir,ants_label_dir)
 
 writer = SummaryWriter("logs")
 img2tensor = transforms.ToTensor()
-
+# 输入    PIL     Image.open()
+# 输出    tensor      ToTensor()7
 for i in range(40):
     try:
         img ,label=ants_dataset[i]
         img_array = np.array(img)
         writer.add_image("test",img_array,i,dataformats='HWC')
+        # Normalize(归一化)
         tensors_img = img2tensor(img)
+        print(tensors_img[0][0][0])
+        trans_norm = transforms.Normalize([6, 3, 2],[9, 3, 5])
+        img_norm = trans_norm(tensors_img)
+        print(img_norm[0][0][0])
+        writer.add_image("Normalize",img_norm,2)
+        # Resize 调整大小
+        trans_resize = transforms.Resize((512,512))
+        img_resize = trans_resize(img)
+        img_resize = img2tensor(img_resize)
+
+        # Comepose - resize
+        trans_resize_2 = transforms.Resize(512)
+        trans_compose = transforms.Compose([trans_resize_2,img2tensor])
+        img_resize_2 = trans_compose(img)
+
     except:
         print(i)
 
