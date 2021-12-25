@@ -1,6 +1,7 @@
 from numpy.core.fromnumeric import resize
 from numpy.core.numeric import False_
 from torch.utils.data import dataset
+from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 import torchvision
 from torchvision.transforms.transforms import Normalize
@@ -60,11 +61,14 @@ dataset_transform = transforms.Compose([torchvision.transforms.ToTensor()])
 train_set = torchvision.datasets.CIFAR10(root="./dataset", transform = dataset_transform, train=True, download=True)
 test_set = torchvision.datasets.CIFAR10(root="./dataset", transform = dataset_transform, train=False, download=True)
 
+
+
+test_loader = DataLoader(dataset = test_set, batch_size = 4, shuffle = True, num_workers = 0, drop_last=False)
+# 对Dataset洗牌 shuffle为是否洗牌
 writer = SummaryWriter("test")
 for i in range(10):
     img,label = test_set[i]
     writer.add_image("dataset", img, i)
-writer.close()
 
 
 writer.close()
