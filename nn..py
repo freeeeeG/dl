@@ -22,14 +22,15 @@ test = torch.randint(0,10,size=(5,5))
 kernel = torch.tensor([[1,2,1],
                         [2,3,1],
                         [1,2,1]])
-# print(kernel.dtype)
 test = torch.reshape(test,(1, 1, 5, 5))
 kernel = torch.reshape(kernel,(1, 1, 3, 3))
 
+print(test.dtype)
+print(kernel.dtype)
 
 print(F.conv2d(test, kernel, stride=1))
 
-print(F.conv2d(test, kernel, stride=2))
+print(F.conv2d(test, kernel, stride=2, padding = 1))
 
 
 
