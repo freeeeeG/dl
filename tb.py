@@ -1,5 +1,6 @@
-from numpy.core.fromnumeric import resize
+from numpy.core.fromnumeric import resize, shape, size
 from numpy.core.numeric import False_
+from torch.nn.modules import module
 from torch.utils.data import dataset
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
@@ -9,6 +10,7 @@ from MyData import *
 import numpy as np
 from torchvision import transforms
 import ssl
+from mo import *
 # 取消全局证书认证
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -21,13 +23,24 @@ writer = SummaryWriter("logs")
 img2tensor = transforms.ToTensor()
 # 输入    PIL     Image.open()
 # 输出    tensor      ToTensor()7
+
+test_mo = Model()
+
+
+
 for i in range(40):
     try:
         img ,label=ants_dataset[i]
         img_array = np.array(img)
+        
+        
         writer.add_image("test",img_array,i,dataformats='HWC')
         # Normalize(归一化)
         tensors_img = img2tensor(img)
+        # print(tensors_img.shape)
+        tensors_img.reshape(1,3,torch.Size(tensors_img.shape)[1],torch.Size(tensors_img.shape)[2])
+        writer.add_image("test_mo",tensors_img,i) 
+
         print(tensors_img[0][0][0])
         trans_norm = transforms.Normalize([6, 3, 2],[9, 3, 5])
         img_norm = trans_norm(tensors_img)
@@ -48,6 +61,9 @@ for i in range(40):
         for i in range(10):
             img_corp = trans_compose2(img)
             writer.add_image("corp",img_corp,i)
+        
+
+
     except:
         print(i)
 
@@ -66,9 +82,12 @@ test_set = torchvision.datasets.CIFAR10(root="./dataset", transform = dataset_tr
 test_loader = DataLoader(dataset = test_set, batch_size = 4, shuffle = True, num_workers = 0, drop_last=False)
 # 对Dataset洗牌 shuffle为是否洗牌
 writer = SummaryWriter("test")
-for i in range(10):
-    img,label = test_set[i]
-    writer.add_image("dataset", img, i)
-
+step = 0
+for i in test_loader:
+    img,label = i
+    # print(img.shape)
+    writer.add_images("haoye",test_mo(img),step)
+    # writer.add_image("dataset", img, step)
+    step +=1
 
 writer.close()
