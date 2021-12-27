@@ -10,6 +10,7 @@ from MyData import *
 import numpy as np
 from torchvision import transforms
 import ssl
+import pool
 from mo import *
 # 取消全局证书认证
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -18,7 +19,7 @@ root_dir = "101_ObjectCategories"
 ants_label_dir = "ant"
 ants_dataset = MyData(root_dir,ants_label_dir)
 
-
+pool_test = pool.Pool_Test()
 writer = SummaryWriter("logs")
 img2tensor = transforms.ToTensor()
 # 输入    PIL     Image.open()
@@ -45,6 +46,7 @@ for i in range(40):
         trans_norm = transforms.Normalize([6, 3, 2],[9, 3, 5])
         img_norm = trans_norm(tensors_img)
         print(img_norm[0][0][0])
+        img_norm = pool_test(img_norm)
         writer.add_image("Normalize",img_norm,2)
         # Resize 调整大小
         trans_resize = transforms.Resize((512,512))
