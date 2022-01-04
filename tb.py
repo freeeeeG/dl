@@ -27,8 +27,6 @@ img2tensor = transforms.ToTensor()
 
 test_mo = Model()
 
-
-
 for i in range(40):
     try:
         img ,label=ants_dataset[i]
@@ -63,9 +61,6 @@ for i in range(40):
         for i in range(10):
             img_corp = trans_compose2(img)
             writer.add_image("corp",img_corp,i)
-        
-
-
     except:
         print(i)
 
